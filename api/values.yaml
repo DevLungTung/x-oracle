@@ -1,0 +1,46 @@
+replicaCount: 1
+type: app # There are app, worker, cronjob
+nameOverride: api
+
+image:
+  repository: anhkhoa3010/api
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest-staging"
+  containerPort: 3000
+terminationGracePeriodSeconds: 60
+
+extraEnvs: []
+envFrom: []
+
+podAnnotations: {}
+
+livenessProbe: []
+readinessProbe: []
+imagePullSecrets: []
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests: 
+    cpu: "200m"
+    memory: "200Mi"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  kind: gateway ### with 2 values: gateway and ingress
+  gateway: ingressgateway
+  gatewayname: istio-system/x-oracle
+  hosts: 
+    - 'staging-api.x-oracle.com'
+  servers: 
+    - port: 80
+      name: http-gateway
+      protocol: HTTP
+  uri_prefix: "/" ### Please mention ending slash
+  # uri_rewrite: "/"

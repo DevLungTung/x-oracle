@@ -1,0 +1,58 @@
+name: api-pipeline
+
+on:
+  push:
+    branches: 
+      - 'main'
+      - 'staging'
+		paths:
+			- 'api/**'
+			- '.github/workflows/api.yml'
+env:
+  REPO_URL: "anhkhoa3010" #sjc.vultrcr.com/rome"
+  SERVICE_NAME: "api"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs: 
+      commit_hash: ${{ steps.build-image.outputs.COMMIT_HASH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: build and push image
+        id: build-image
+        run: |
+          commit_hash=$(git rev-parse --short $GITHUB_SHA)
+          docker build -t ${REPO_URL}/${SERVICE_NAME}:${commit_hash} -t ${REPO_URL}/${SERVICE_NAME}:latest-${{ github.ref_name }} api
+          echo "${{ secrets.DOCKERHUB_PASS }}" | docker login -u anhkhoa3010 --password-stdin
+          docker push ${REPO_URL}/${SERVICE_NAME}:${commit_hash}
+					docker push ${REPO_URL}/${SERVICE_NAME}:latest-${{ github.ref_name }}
+          echo "COMMIT_HASH=$commit_hash" >> $GITHUB_OUTPUT
+          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build 
+    env:
+      COMMIT_HASH: ${{ needs.build.outputs.commit_hash }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: "nakhoa3010/helm-charts"
+          path: helm-charts
+          ref: main
+      - run: |
+          NAMESPACE="x-oracle"
+          HOST="api.x-oracle.com"
+          if [[ ${{ github.ref_name }} == "staging" ]]; then
+            NAMESPACE="staging-${NAMESPACE}"
+            HOST="staging-$HOST"
+          fi
+      
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d >> kubeconfig
+          helm upgrade --install ${SERVICE_NAME} helm-charts -f api/values.yaml -n ${NAMESPACE} \
+            --kubeconfig kubeconfig \
+            --set image.tag=${COMMIT_HASH} \
+            --set ingress.hosts[0]=${HOST} \
+            --create-namespace
