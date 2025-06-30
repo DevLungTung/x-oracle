@@ -5,9 +5,9 @@ on:
     branches: 
       - 'main'
       - 'staging'
-		paths:
-			- 'api/**'
-			- '.github/workflows/api.yml'
+    paths:
+      - 'api/**'
+      - '.github/workflows/api.yml'
 env:
   REPO_URL: "anhkhoa3010" #sjc.vultrcr.com/rome"
   SERVICE_NAME: "api"
@@ -27,7 +27,7 @@ jobs:
           docker build -t ${REPO_URL}/${SERVICE_NAME}:${commit_hash} -t ${REPO_URL}/${SERVICE_NAME}:latest-${{ github.ref_name }} api
           echo "${{ secrets.DOCKERHUB_PASS }}" | docker login -u anhkhoa3010 --password-stdin
           docker push ${REPO_URL}/${SERVICE_NAME}:${commit_hash}
-					docker push ${REPO_URL}/${SERVICE_NAME}:latest-${{ github.ref_name }}
+          docker push ${REPO_URL}/${SERVICE_NAME}:latest-${{ github.ref_name }}
           echo "COMMIT_HASH=$commit_hash" >> $GITHUB_OUTPUT
           
   deploy:
