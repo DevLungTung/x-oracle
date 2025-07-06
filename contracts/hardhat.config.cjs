@@ -24,6 +24,18 @@ const _base = {
   ...commonConfig,
 }
 
+const _core = {
+  url: 'https://rpc.coredao.org',
+  chainId: 1116,
+  ...commonConfig,
+}
+
+const _sei = {
+  url: 'https://evm-rpc.sei-apis.com',
+  chainId: 1329,
+  ...commonConfig,
+}
+
 const config = {
   solidity: {
     version: '0.8.16',
@@ -47,6 +59,12 @@ const config = {
     },
     base: {
       ..._base,
+    },
+    core: {
+      ..._core,
+    },
+    sei: {
+      ..._sei,
     },
   },
   paths: {

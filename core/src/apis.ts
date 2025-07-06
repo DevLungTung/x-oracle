@@ -6,8 +6,6 @@ import { XOracleError, XOracleErrorCode } from './errors'
 import { IReporterConfig, IVrfConfig } from './types'
 const FILE_NAME = import.meta.url
 
-export async function aggregatorByName(feedName: string) {}
-
 export async function getOperatorAddress({
   aggregatorAddress,
   logger
@@ -39,7 +37,6 @@ export async function getOperatorAddress({
  * @exception {GetReporterRequestFailed}
  */
 export async function getReporterByAddress({
-  service,
   chain,
   oracleAddress,
   logger

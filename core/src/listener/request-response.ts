@@ -1,20 +1,19 @@
-import { Interface, Log } from 'ethers'
+import { Interface } from 'ethers'
 import { Logger } from 'pino'
 import type { RedisClientType } from 'redis'
 import { listenerService } from './listener'
-import { IListenerConfig, IDataRequested, IADCSListenerWorker } from '../types'
+import { IDataRequested, IListenerConfig, IRequestResponseListenerWorker } from '../types'
 import { ProcessEventOutputType } from './types'
 import {
   CHAIN,
-  LISTENER_ADCS_HISTORY_QUEUE_NAME,
-  LISTENER_ADCS_LATEST_QUEUE_NAME,
-  LISTENER_ADCS_PROCESS_EVENT_QUEUE_NAME,
-  ADCS_LISTENER_STATE_NAME,
-  ADCS_SERVICE_NAME,
-  WORKER_ADCS_QUEUE_NAME
+  LISTENER_RR_HISTORY_QUEUE_NAME,
+  LISTENER_RR_LATEST_QUEUE_NAME,
+  LISTENER_RR_PROCESS_EVENT_QUEUE_NAME,
+  RR_LISTENER_STATE_NAME,
+  RR_SERVICE_NAME,
+  WORKER_RR_QUEUE_NAME
 } from '../settings'
-import { ADCS_ABI } from '../constants/adcs.coordinator.abi'
-
+import { RequestResponseAbi } from '../constants/rr.coordinator.abi'
 const FILE_NAME = import.meta.url
 
 export async function buildListener(
@@ -23,19 +22,19 @@ export async function buildListener(
   rpcUrl: string,
   logger: Logger
 ) {
-  const stateName = ADCS_LISTENER_STATE_NAME
-  const service = ADCS_SERVICE_NAME
+  const stateName = RR_LISTENER_STATE_NAME
+  const service = RR_SERVICE_NAME
   const chain = CHAIN
   const eventName = 'DataRequested'
-  const latestQueueName = LISTENER_ADCS_LATEST_QUEUE_NAME
-  const historyQueueName = LISTENER_ADCS_HISTORY_QUEUE_NAME
-  const processEventQueueName = LISTENER_ADCS_PROCESS_EVENT_QUEUE_NAME
-  const workerQueueName = WORKER_ADCS_QUEUE_NAME
-  const iface = new Interface(ADCS_ABI)
+  const latestQueueName = LISTENER_RR_LATEST_QUEUE_NAME
+  const historyQueueName = LISTENER_RR_HISTORY_QUEUE_NAME
+  const processEventQueueName = LISTENER_RR_PROCESS_EVENT_QUEUE_NAME
+  const workerQueueName = WORKER_RR_QUEUE_NAME
+  const iface = new Interface(RequestResponseAbi)
 
   listenerService({
     config,
-    abi: ADCS_ABI,
+    abi: RequestResponseAbi,
     stateName,
     service,
     chain,
@@ -54,18 +53,23 @@ export async function buildListener(
 
 async function processEvent({ iface, logger }: { iface: Interface; logger: Logger }) {
   const _logger = logger.child({ name: 'Request-Response processEvent', file: FILE_NAME })
+
   async function wrapper(log): Promise<ProcessEventOutputType | undefined> {
-    const eventData = iface?.parseLog(log)?.args as unknown as IDataRequested
+    const eventData = iface.parseLog(log)?.args as unknown as IDataRequested
     _logger.debug(eventData, 'eventData')
+
     const requestId = eventData.requestId.toString()
-    const jobData: IADCSListenerWorker = {
-      callbackAddress: log.address.toLowerCase(),
-      blockNum: Number(eventData.blockNumber),
+    const jobData: IRequestResponseListenerWorker = {
+      callbackAddress: log.address,
+      blockNum: log.blockNumber,
       requestId,
+      jobId: eventData.jobId.toString(),
+      accId: eventData.accId.toString(),
       callbackGasLimit: Number(eventData.callbackGasLimit),
       sender: eventData.sender,
-      jobId: eventData.jobId,
-      data: eventData.data
+      isDirectPayment: eventData.isDirectPayment,
+      numSubmission: Number(eventData.numSubmission),
+      data: eventData.data.toString()
     }
     _logger.debug(jobData, 'jobData')
     return { jobName: 'request-response', jobId: requestId, jobData }

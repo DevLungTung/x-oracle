@@ -1,7 +1,8 @@
 import { parseArgs } from 'node:util'
 import type { RedisClientType } from 'redis'
 import { buildLogger } from '../logger'
-import { buildListener as buildADCSListener } from './adcs'
+import { buildListener as buildRRListener } from './request-response'
+import { buildListener as buildVRFListener } from './vrf'
 import { postprocessListeners } from './utils'
 import { XOracleError, XOracleErrorCode } from '../errors'
 import { CHAIN, REDIS_HOST, REDIS_PORT, REDIS_USERNAME, REDIS_PASSWORD } from '../settings'
@@ -11,7 +12,8 @@ import { IListeners } from './types'
 import { createClient } from 'redis'
 
 const LISTENERS: IListeners = {
-  ADCS: buildADCSListener
+  RR: buildRRListener,
+  VRF: buildVRFListener
 }
 
 const FILE_NAME = import.meta.url

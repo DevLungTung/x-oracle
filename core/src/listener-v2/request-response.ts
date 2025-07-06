@@ -15,7 +15,7 @@ import { RequestResponseAbi } from '../constants/rr.coordinator.abi'
 import { Queue } from 'bullmq'
 import { getUniqueEventIdentifier } from './utils'
 import express, { Request, Response } from 'express'
-import { getVrfConfig } from '../apis'
+
 const FILE_NAME = import.meta.url
 
 export async function buildListener(logger: Logger) {

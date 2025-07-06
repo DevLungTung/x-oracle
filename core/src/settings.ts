@@ -32,15 +32,6 @@ export const WORKER_CHECK_HEARTBEAT_QUEUE_NAME = `${DEPLOYMENT_NAME}-worker-chec
 
 export const WORKER_DEVIATION_QUEUE_NAME = `${DEPLOYMENT_NAME}-deviation-queue`
 
-// ADCS
-export const LISTENER_ADCS_HISTORY_QUEUE_NAME = `${DEPLOYMENT_NAME}-listener-adcs-history-queue`
-export const LISTENER_ADCS_LATEST_QUEUE_NAME = `${DEPLOYMENT_NAME}-listener-adcs-latest-queue`
-export const LISTENER_ADCS_PROCESS_EVENT_QUEUE_NAME = `${DEPLOYMENT_NAME}-listener-adcs-process-event-queue`
-export const ADCS_LISTENER_STATE_NAME = `${DEPLOYMENT_NAME}-adcs-listener-state`
-export const ADCS_SERVICE_NAME = 'ADCS'
-export const WORKER_ADCS_QUEUE_NAME = `${DEPLOYMENT_NAME}-worker-adcs-queue`
-export const WORKER_AUTOMATE_ADCS_QUEUE_NAME = `${DEPLOYMENT_NAME}-worker-automate-adcs-queue`
-
 // VRF
 export const LISTENER_VRF_HISTORY_QUEUE_NAME = `${DEPLOYMENT_NAME}-listener-vrf-history-queue`
 export const LISTENER_VRF_LATEST_QUEUE_NAME = `${DEPLOYMENT_NAME}-listener-vrf-latest-queue`

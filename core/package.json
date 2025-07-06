@@ -41,10 +41,9 @@
     "lint": "DEBUG=eslint:cli-engine npx eslint 'src/**/*.ts' 'src/*.ts'",
     "remove-job": "node --no-warnings --import=specifier-resolution-node/register --experimental-specifier-resolution=node --experimental-json-modules dist/cmd/removeRepeatingJob.js",
     "start:listener": "node --no-warnings --import=specifier-resolution-node/register --experimental-specifier-resolution=node --experimental-json-modules dist/listener-v2/main",
-    "start:listener:adcs": "yarn start:listener --service ADCS",
     "start:listener:vrf": "yarn start:listener --service VRF",
     "start:listener:rr": "yarn start:listener --service RR",
-    "create-qn-stream": "node --no-warnings --import=specifier-resolution-node/register --experimental-specifier-resolution=node --experimental-json-modules dist/tools/createQnStreams"
+    "qn-stream:create": "node --no-warnings --import=specifier-resolution-node/register --experimental-specifier-resolution=node --experimental-json-modules dist/tools/createQnStreams"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^6.9.1",

@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 async function createQnStreams() {
-  const filePath = join(__dirname, '..', '..', 'src', 'tools', 'data', 'base_rr.json')
+  const filePath = join(__dirname, '..', '..', 'src', 'tools', 'data', 'sei_rr.json')
   const fileData = readFileSync(filePath, 'utf8')
   const streams = JSON.parse(fileData)
   for (const stream of streams) {

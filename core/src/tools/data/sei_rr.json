@@ -1,0 +1,10 @@
+[
+  {
+    "chain": "Sei",
+    "name": "Sei-rr",
+    "coordinatorAddress": "0xBe1D48b48940C44e1b316556455Dc56fA65ceF9E",
+    "eventTopic": "0xf5de04e252c7bc264fe51dceea89d95673b5166c209718c5f5a068341dab8111",
+    "startBlock": "155883738",
+    "webhookUrl": "https://webhook.x-oracle.com/events/rr"
+  }
+]

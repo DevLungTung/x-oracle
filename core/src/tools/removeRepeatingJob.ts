@@ -1,10 +1,10 @@
 import { Queue } from 'bullmq'
-import { BULLMQ_CONNECTION, WORKER_ADCS_QUEUE_NAME } from '../settings'
+import { BULLMQ_CONNECTION, WORKER_RR_QUEUE_NAME } from '../settings'
 import { Logger } from 'pino'
 
 export async function removeRepeatingJob(jobId: string, logger: Logger) {
   try {
-    const queue = new Queue(WORKER_ADCS_QUEUE_NAME, BULLMQ_CONNECTION)
+    const queue = new Queue(WORKER_RR_QUEUE_NAME, BULLMQ_CONNECTION)
 
     // Remove the repeatable job
     const removed = await queue.removeRepeatableByKey(jobId)

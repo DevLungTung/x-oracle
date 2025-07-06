@@ -1,6 +1,5 @@
 import { parseArgs } from 'node:util'
 import { buildLogger } from '../logger'
-import { buildListener as buildADCSListener } from './adcs'
 import { XOracleError, XOracleErrorCode } from '../errors'
 import { hookConsoleError } from '../utils'
 import { IListenersV2 } from './types'
@@ -8,7 +7,6 @@ import { buildListener as buildVRFListener } from './vrf'
 import { buildListener as buildRRListener } from './request-response'
 
 const LISTENERS: IListenersV2 = {
-  ADCS: buildADCSListener,
   VRF: buildVRFListener,
   RR: buildRRListener
 }
